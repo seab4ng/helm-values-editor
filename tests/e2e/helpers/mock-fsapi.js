@@ -13,7 +13,9 @@ function makeFileHandle(name, content) {
     createWritable: async () => {
       let written = '';
       return {
-        write: async (chunk) => { written += chunk; },
+        write: async chunk => {
+          written += chunk;
+        },
         close: async () => {},
       };
     },
@@ -25,8 +27,12 @@ function makeChartsDir() {
   return {
     kind: 'directory',
     name: 'charts',
-    getFileHandle: async () => { throw new Error('not found'); },
-    getDirectoryHandle: async () => { throw new Error('not found'); },
+    getFileHandle: async () => {
+      throw new Error('not found');
+    },
+    getDirectoryHandle: async () => {
+      throw new Error('not found');
+    },
     entries: async function* () {},
     requestPermission: async () => 'granted',
   };
@@ -40,12 +46,12 @@ function makeDirHandle() {
   return {
     kind: 'directory',
     name: 'test-chart',
-    getFileHandle: async (name) => {
+    getFileHandle: async name => {
       if (name === 'Chart.yaml') return chartFile;
       if (name === 'values.yaml') return valuesFile;
       throw new DOMException('not found', 'NotFoundError');
     },
-    getDirectoryHandle: async (name) => {
+    getDirectoryHandle: async name => {
       if (name === 'charts') return chartsDir;
       throw new DOMException('not found', 'NotFoundError');
     },
@@ -96,8 +102,12 @@ affinity: {}
       createWritable: async () => {
         let buf = '';
         return {
-          write: async (c) => { buf += c; },
-          close: async () => { content = buf; },
+          write: async c => {
+            buf += c;
+          },
+          close: async () => {
+            content = buf;
+          },
         };
       },
       requestPermission: async () => 'granted',
@@ -107,8 +117,12 @@ affinity: {}
   const chartsDir = {
     kind: 'directory',
     name: 'charts',
-    getFileHandle: async () => { throw new DOMException('not found', 'NotFoundError'); },
-    getDirectoryHandle: async () => { throw new DOMException('not found', 'NotFoundError'); },
+    getFileHandle: async () => {
+      throw new DOMException('not found', 'NotFoundError');
+    },
+    getDirectoryHandle: async () => {
+      throw new DOMException('not found', 'NotFoundError');
+    },
     entries: async function* () {},
     requestPermission: async () => 'granted',
   };
@@ -119,12 +133,12 @@ affinity: {}
   const dirHandle = {
     kind: 'directory',
     name: 'test-chart',
-    getFileHandle: async (name) => {
+    getFileHandle: async name => {
       if (name === 'Chart.yaml') return chartFile;
       if (name === 'values.yaml') return valuesFile;
       throw new DOMException('not found', 'NotFoundError');
     },
-    getDirectoryHandle: async (name) => {
+    getDirectoryHandle: async name => {
       if (name === 'charts') return chartsDir;
       throw new DOMException('not found', 'NotFoundError');
     },
@@ -136,6 +150,7 @@ affinity: {}
     requestPermission: async () => 'granted',
   };
 
+  /* global window */
   window.showDirectoryPicker = async () => dirHandle;
   window.showOpenFilePicker = async () => [makeFile('values.yaml', valuesYamlContent)];
 }

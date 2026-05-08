@@ -3,6 +3,8 @@
 [![Docker Hub](https://img.shields.io/docker/v/sokushinbutsu/helm-values-editor?sort=semver&label=docker&logo=docker)](https://hub.docker.com/r/sokushinbutsu/helm-values-editor)
 [![GitHub](https://img.shields.io/badge/github-helm--values--editor-blue?logo=github)](https://github.com/seab4ng/helm-values-editor)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![CI](https://github.com/seab4ng/helm-values-editor/actions/workflows/release.yml/badge.svg)](https://github.com/seab4ng/helm-values-editor/actions/workflows/release.yml)
+[![E2E Tests](https://github.com/seab4ng/helm-values-editor/actions/workflows/e2e.yml/badge.svg)](https://github.com/seab4ng/helm-values-editor/actions/workflows/e2e.yml)
 
 A browser-based editor for Helm chart `values.yaml` files. Open a chart folder, search for any field, change values, and save back to disk — no terminal needed.
 
@@ -206,3 +208,5 @@ Required secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 - `Dockerfile` — two-stage build: node for vendoring js-yaml, nginx for serving
 
 Fork, make changes, run tests, open a PR.
+
+For full details on CI/CD pipeline, release process, code quality tools, and project structure see **[docs/development.md](docs/development.md)**.

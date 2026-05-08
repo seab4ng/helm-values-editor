@@ -1,0 +1,5 @@
+# Global owner — required reviewer on all PRs
+* @seab4ng
+
+# Workflow changes require owner review
+.github/workflows/ @seab4ng

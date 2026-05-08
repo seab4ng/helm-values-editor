@@ -23,7 +23,8 @@ module.exports = defineConfig({
     },
   ],
   webServer: {
-    command: 'mkdir -p app/vendor && cp node_modules/js-yaml/dist/js-yaml.min.js app/vendor/js-yaml.min.js && npx serve app -l 3000 --no-clipboard',
+    command:
+      'mkdir -p app/vendor && cp node_modules/js-yaml/dist/js-yaml.min.js app/vendor/js-yaml.min.js && npx serve app -l 3000 --no-clipboard',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
     timeout: 15000,
