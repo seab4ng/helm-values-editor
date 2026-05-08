@@ -5,6 +5,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versio
 
 ---
 
+## [1.2.0](https://github.com/seab4ng/helm-values-editor/compare/v1.1.0...v1.2.0) (2026-05-08)
+
+
+### Features
+
+* test release-please tag format fix ([c051508](https://github.com/seab4ng/helm-values-editor/commit/c051508804d79d6d50001476a342c0ebee517b0f))
+
 ## [1.1.0](https://github.com/seab4ng/helm-values-editor/compare/helm-values-editor-v1.0.7...helm-values-editor-v1.1.0) (2026-05-08)
 
 
