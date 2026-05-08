@@ -5,7 +5,42 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versio
 
 ---
 
-## [Unreleased]
+## [Unreleased] — targeting 1.1.0
+
+### Added
+- **Edit-parent modal**: hover any nested field to reveal a pencil button that opens a YAML editor for the entire parent object (map or list). Apply replaces all children atomically; Cancel leaves values unchanged.
+- **Blank parent-edit clears container**: leaving the textarea empty and clicking Apply sets a list parent back to `[]` or a map parent back to `{}` — the modal hint shows which empty value will be used.
+- **Dotted YAML key support**: YAML keys that contain a literal dot (e.g. `argocd.argoproj.io/sync-options`) are now encoded with bracket notation (`["key"]`) in paths so they never collide with nested object paths. Read, write, revert, and history all handle them correctly.
+
+### Fixed
+- Revert selected / Undo all now correctly reverts fields that were created by filling an originally-empty `[]` or `{}` container (previously those fields had no revert path and were silently skipped).
+- Diff badge and Undo button state now update correctly after removing a chart via "×".
+- Phantom amber highlight removed: dotted YAML keys no longer create a ghost nested structure that caused unrelated fields to appear changed on load.
+- `snapshotOriginal` uses first-wins deduplication matching the order `renderValues` uses, eliminating mismatched original values for duplicate-key YAML files.
+- `cleanStaleBracketKeys` now called after every `jsyaml.load` in all edit handlers (apply, parent-edit, revert, undo) — prevents stale literal `key[0]` string artifacts corrupting YAML output.
+- `getNestedVal` and `setNestedPath` use bracket-aware `parsePath` — dotted key segments no longer split on the dot.
+- Duplicate `const` / function declarations removed from index.html that caused `SyntaxError` on some runtimes.
+- New child fields (added via parent-edit to an empty container) show amber highlight immediately and do not show a history button until the field is directly edited.
+- Parent-edit path resolution for list items now uses bracket-aware `parentPathOf` — `imagePullSecrets[0]` correctly resolves parent as `imagePullSecrets`.
+
+### Tests
+- 31 new e2e lifecycle tests (`apply-lifecycle.spec.js`): re-apply scalars, type-coercion CSS class changes, undo-all value restoration, revert-selected restoration, history "Use" value verification, list/map full apply→undo→re-apply cycle.
+- 17 new e2e value tests (`apply-values.spec.js`): verifies actual `.val-val` text and CSS class after apply for string, number, list (YAML mode), map (YAML mode), view-switch persistence, and multi-field apply.
+- 14 new e2e dotted-key tests (`dotted-keys.spec.js`): bracket path display, apply, revert, sibling isolation.
+- Extended `parent-edit.spec.js`, `revert.spec.js`, `presets.spec.js`, `batch.spec.js`, `field-history.spec.js` with missing edge cases identified in full audit.
+- 139 unit tests covering `parsePath`, `parentPathOf`, dotted-key flatten/set/get, and collision-cleanup edge cases.
+
+### CI / DevOps
+- ESLint (flat config, `eslint.config.mjs`) — lint step blocks merge on errors; `npm run lint` / `npm run lint:fix` locally.
+- Prettier — format check blocks merge; `npm run format` to auto-fix locally.
+- `npm audit --audit-level=high` — blocks merge on HIGH/CRITICAL CVEs in dependencies.
+- Code coverage via `--experimental-test-coverage` printed in CI unit test log.
+- `npm cache` (`cache: 'npm'` in `actions/setup-node`) added to both `release.yml` and `e2e.yml` — ~30s saved per run.
+- Lighthouse CI workflow (`lighthouse.yml`) — runs on PRs to `main`; scores performance ≥ 0.8 and accessibility ≥ 0.9; posts report URL to PR. Permissions locked to `contents: read`.
+- Stale bot (`stale.yml`) — labels inactive issues/PRs after 60 days, closes after 14 more; runs every Monday.
+- `release-please.yml` — automates Release PRs and CHANGELOG from conventional commits going forward.
+- CI and E2E test status badges added to README.
+- `docs/development.md` — full developer guide: Mermaid CI/CD flow diagram, tool usage, release process, secrets reference, project structure.
 
 ## [1.0.7] - 2026-05-03
 
