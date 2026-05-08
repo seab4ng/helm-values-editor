@@ -33,7 +33,7 @@ jobs:
         run: npx playwright test
 
       - name: Publish E2E test report (dorny - Check Run)
-        uses: dorny/test-reporter@v1
+        uses: dorny/test-reporter@v3
         if: always()
         with:
           name: E2E Tests
