@@ -5,6 +5,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versio
 
 ---
 
+## [1.2.2](https://github.com/seab4ng/helm-values-editor/compare/v1.2.1...v1.2.2) (2026-05-08)
+
+
+### Bug Fixes
+
+* test Docker job after removing stamp step ([c8cc0df](https://github.com/seab4ng/helm-values-editor/commit/c8cc0df7733bfd2921aff262f2bc1bf47cde67ac))
+
 ## [1.2.1](https://github.com/seab4ng/helm-values-editor/compare/v1.2.0...v1.2.1) (2026-05-08)
 
 
