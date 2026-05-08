@@ -60,21 +60,6 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Stamp CHANGELOG — replace [Unreleased] with version and date
-        run: |
-          VERSION="${GITHUB_REF_NAME}"          # e.g. v1.1.0
-          VERSION_NUM="${VERSION#v}"            # strip leading v → 1.1.0
-          DATE="$(date -u +%Y-%m-%d)"
-          # Replace first occurrence of [Unreleased] (with or without — targeting X.Y.Z suffix)
-          sed -i "s/## \[Unreleased\][^\n]*/## [${VERSION_NUM}] - ${DATE}/" CHANGELOG.md
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md
-          git diff --cached --quiet || git commit -m "docs(changelog): stamp ${VERSION_NUM} release date"
-          git push origin HEAD:main
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -110,7 +95,7 @@ jobs:
 
       - name: Upload Trivy results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v4
-        if: always()
+        if: always() && hashFiles('trivy.sarif') != ''
         with:
           sarif_file: trivy.sarif
 
