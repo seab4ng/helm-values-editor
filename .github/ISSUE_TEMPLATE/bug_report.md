@@ -8,9 +8,9 @@ labels: bug
 <!-- What happened? What did you expect? -->
 
 **Steps to reproduce**
-1. 
-2. 
-3. 
+1.
+2.
+3.
 
 **Browser**
 <!-- Chrome / Edge, version -->

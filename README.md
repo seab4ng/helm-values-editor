@@ -196,7 +196,7 @@ git tag v1.2.3
 git push origin v1.2.3
 ```
 
-Required secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
+Required secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.  # pragma: allowlist secret
 
 ---
 

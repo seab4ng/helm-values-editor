@@ -141,8 +141,8 @@ npm run lint        # show all errors and warnings
 npm run lint:fix    # auto-fix what ESLint can fix automatically
 ```
 
-**What CI does:** `npm run lint` — exits non-zero on any error → merge blocked.  
-**Config:** `eslint.config.mjs`  
+**What CI does:** `npm run lint` — exits non-zero on any error → merge blocked.
+**Config:** `eslint.config.mjs`
 **Scope:** `app/lib.js`, `tests/**`, `playwright.config.js`
 
 ### Prettier — code formatting
@@ -154,7 +154,7 @@ npm run format        # reformat all files in place (run before committing)
 npm run format:check  # check only, no write (what CI runs)
 ```
 
-**Workflow:** write code → `npm run format` → commit → CI passes.  
+**Workflow:** write code → `npm run format` → commit → CI passes.
 **Config:** `.prettierrc`, `.prettierignore`
 
 ### npm audit — dependency vulnerabilities
@@ -242,7 +242,7 @@ Runs on every PR to `main`. Loads the app in headless Chrome and scores it.
 
 A link to the full Lighthouse report is posted as a comment on the PR.
 
-**Config:** `.lighthouserc.json`  
+**Config:** `.lighthouserc.json`
 **Not the same as Playwright** — Playwright tests JS logic ("does Apply button work?"). Lighthouse tests page quality ("is the page fast? are inputs labelled for screen readers?").
 
 ---
