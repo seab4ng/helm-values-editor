@@ -23,6 +23,12 @@ repos:
       - id: conventional-pre-commit
         stages: [commit-msg]
 
+  # Lint Dockerfile (requires Docker)
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.0
+    hooks:
+      - id: hadolint-docker
+
   # ESLint + Prettier via local npm scripts (uses your existing config)
   - repo: local
     hooks:

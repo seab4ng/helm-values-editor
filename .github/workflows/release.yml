@@ -34,11 +34,6 @@ jobs:
       - name: Format check
         run: npm run format:check
 
-      - name: Lint Dockerfile
-        uses: hadolint/hadolint-action@v3.1.0
-        with:
-          dockerfile: Dockerfile
-
       - name: Security audit
         run: npm audit --audit-level=high
 
