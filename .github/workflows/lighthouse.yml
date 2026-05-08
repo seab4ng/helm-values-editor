@@ -26,15 +26,18 @@ jobs:
       - name: Vendor js-yaml
         run: mkdir -p app/vendor && cp node_modules/js-yaml/dist/js-yaml.min.js app/vendor/js-yaml.min.js
 
+      - name: Start app server
+        run: npx serve app -l 3000 --no-clipboard &
+        shell: bash
+
+      - name: Wait for server
+        run: npx wait-on http://localhost:3000 --timeout 15000
+
       - name: Run Lighthouse CI
         uses: treosh/lighthouse-ci-action@v11
         with:
           urls: |
             http://localhost:3000/
-          serverBaseUrl: ''
           uploadArtifacts: true
           temporaryPublicStorage: true
           configPath: '.lighthouserc.json'
-          serverCommand: npx serve app -l 3000 --no-clipboard
-          serverReadyPattern: 'Accepting connections'
-          serverReadyTimeout: 15000
