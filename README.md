@@ -208,3 +208,5 @@ Required secrets: `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`.
 - `Dockerfile` — two-stage build: node for vendoring js-yaml, nginx for serving
 
 Fork, make changes, run tests, open a PR.
+
+For full details on CI/CD pipeline, release process, code quality tools, and project structure see **[docs/development.md](docs/development.md)**.
