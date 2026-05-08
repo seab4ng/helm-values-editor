@@ -1,6 +1,6 @@
 {
   "name": "helm-values-editor",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Browser-based editor for Helm chart values files — search, batch-edit, and write back to disk without a terminal.",
   "homepage": "https://github.com/seab4ng/helm-values-editor",
   "repository": {

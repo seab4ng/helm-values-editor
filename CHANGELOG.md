@@ -5,6 +5,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versio
 
 ---
 
+## [1.2.1](https://github.com/seab4ng/helm-values-editor/compare/v1.2.0...v1.2.1) (2026-05-08)
+
+
+### Bug Fixes
+
+* test PAT-triggered release pipeline ([78f1c62](https://github.com/seab4ng/helm-values-editor/commit/78f1c623c4c689e9ee6c4831d35ee6b35e3b8a24))
+
 ## [1.2.0](https://github.com/seab4ng/helm-values-editor/compare/v1.1.0...v1.2.0) (2026-05-08)
 
 
