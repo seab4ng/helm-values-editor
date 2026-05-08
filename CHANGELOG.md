@@ -5,6 +5,14 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versio
 
 ---
 
+## [1.2.3](https://github.com/seab4ng/helm-values-editor/compare/v1.2.2...v1.2.3) (2026-05-08)
+
+
+### Bug Fixes
+
+* **docker:** remove curl to eliminate unfixable CVE-2026-3805 ([2f71a60](https://github.com/seab4ng/helm-values-editor/commit/2f71a60e4b065b3f06283af23bd81c75ef8f7ae5))
+* trigger v1.2.3 release to ship curl removal and Docker hardening ([af16655](https://github.com/seab4ng/helm-values-editor/commit/af16655fd1a3f87722d3eb26ad220993770cb344))
+
 ## [1.2.2](https://github.com/seab4ng/helm-values-editor/compare/v1.2.1...v1.2.2) (2026-05-08)
 
 
