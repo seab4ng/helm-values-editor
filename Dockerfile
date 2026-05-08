@@ -11,7 +11,8 @@ LABEL maintainer="Yakir Veneci" \
       org.opencontainers.image.source="https://github.com/seab4ng/helm-values-veiwer"
 
 RUN apk upgrade --no-cache && \
-    rm -rf /usr/share/nginx/html/* /etc/nginx/conf.d/default.conf
+    apk del curl && \
+    rm -rf /usr/share/nginx/html/* /etc/nginx/conf.d/default.conf /var/cache/apk/*
 
 COPY nginx.conf           /etc/nginx/conf.d/default.conf
 COPY app/index.html       /usr/share/nginx/html/index.html
