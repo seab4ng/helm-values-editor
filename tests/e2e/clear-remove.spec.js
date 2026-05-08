@@ -21,9 +21,7 @@ test('clicking X on chart tree node removes it from the tree', async ({ page }) 
 test('removing chart shows success toast', async ({ page }) => {
   await page.locator('.tree-node[data-name="test-chart"]').hover();
   await page.locator('.tree-node[data-name="test-chart"] .tree-del').click({ force: true });
-  await expect(
-    page.locator('#toast-area .toast', { hasText: 'Removed' }).first()
-  ).toBeVisible({ timeout: 3000 });
+  await expect(page.locator('#toast-area .toast', { hasText: 'Removed' }).first()).toBeVisible({ timeout: 3000 });
 });
 
 test('removing only chart shows empty state in values panel', async ({ page }) => {
@@ -73,9 +71,7 @@ test('Clear all shows empty state in values panel', async ({ page }) => {
 
 test('Clear all shows success toast', async ({ page }) => {
   await page.click('#clear-all-btn');
-  await expect(
-    page.locator('#toast-area .toast', { hasText: 'Cleared' }).first()
-  ).toBeVisible({ timeout: 3000 });
+  await expect(page.locator('#toast-area .toast', { hasText: 'Cleared' }).first()).toBeVisible({ timeout: 3000 });
 });
 
 test('Clear all hides batch bar', async ({ page }) => {

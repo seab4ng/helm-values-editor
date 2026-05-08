@@ -1,0 +1,8 @@
+node_modules/
+app/vendor/
+app/index.html
+playwright-report/
+test-results/
+coverage/
+*.xml
+*.bak

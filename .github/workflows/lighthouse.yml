@@ -1,0 +1,36 @@
+name: Lighthouse CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  lighthouse:
+    name: Lighthouse CI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '22'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Vendor js-yaml
+        run: mkdir -p app/vendor && cp node_modules/js-yaml/dist/js-yaml.min.js app/vendor/js-yaml.min.js
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v11
+        with:
+          urls: |
+            http://localhost:3000/
+          serverBaseUrl: ''
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: '.lighthouserc.json'
+          serverCommand: npx serve app -l 3000 --no-clipboard
+          serverReadyPattern: 'Accepting connections'
+          serverReadyTimeout: 15000

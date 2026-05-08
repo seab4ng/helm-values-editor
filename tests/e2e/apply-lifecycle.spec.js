@@ -84,22 +84,30 @@ test('re-apply number keeps .num class and updates displayed value', async ({ pa
   await applyVal(page, 'replicaCount', '7');
   await applyVal(page, 'replicaCount', '12');
   // coerceValue('12', original=7[num]) → 12 (number)
-  await expect(page.locator('.val-row', { hasText: 'replicaCount' }).first().locator('.val-val.num')).toContainText('12');
+  await expect(page.locator('.val-row', { hasText: 'replicaCount' }).first().locator('.val-val.num')).toContainText(
+    '12'
+  );
 });
 
 test('re-apply with non-numeric string to num field gives .str class', async ({ page }) => {
   // coerceValue('hello', original=2[num]) → NaN → returns 'hello' (string)
   await applyVal(page, 'replicaCount', '7');
   await applyVal(page, 'replicaCount', 'hello');
-  await expect(page.locator('.val-row', { hasText: 'replicaCount' }).first().locator('.val-val.str')).toContainText('hello');
+  await expect(page.locator('.val-row', { hasText: 'replicaCount' }).first().locator('.val-val.str')).toContainText(
+    'hello'
+  );
 });
 
-test('re-apply after type changed to string: numeric string stays .str (coerce uses current file value)', async ({ page }) => {
+test('re-apply after type changed to string: numeric string stays .str (coerce uses current file value)', async ({
+  page,
+}) => {
   // After apply 'hello': file value = 'hello' (string).
   // Re-apply '3': coerceValue('3', 'hello') → typeof 'hello' !== 'number' → returns '3' as string → .str
   await applyVal(page, 'replicaCount', 'hello');
   await applyVal(page, 'replicaCount', '3');
-  await expect(page.locator('.val-row', { hasText: 'replicaCount' }).first().locator('.val-val.str')).toContainText('3');
+  await expect(page.locator('.val-row', { hasText: 'replicaCount' }).first().locator('.val-val.str')).toContainText(
+    '3'
+  );
 });
 
 // ── Undo all restores original values ──
@@ -213,7 +221,9 @@ test('apply 3 fields, revert 2: third field still shows new value', async ({ pag
   await page.click('#undo-btn');
   await expect(page.locator('#toast-area .toast', { hasText: 'Reverted' }).first()).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(200);
-  await expect(page.locator('.val-row', { hasText: 'service.type' }).first().locator('.val-val')).toContainText('NodePort');
+  await expect(page.locator('.val-row', { hasText: 'service.type' }).first().locator('.val-val')).toContainText(
+    'NodePort'
+  );
 });
 
 test('apply 3 fields, revert 2: reverted fields show original values', async ({ page }) => {
@@ -255,9 +265,9 @@ test('Use intermediate entry shows intermediate value in .val-val', async ({ pag
   await applyVal(page, 'replicaCount', '9');
   await openHistoryPopup(page, 'replicaCount');
   // Intermediate entry: not current (9), not original (2)
-  const nonOriginalUse = page.locator(
-    '#field-history-popup .fhpop-entry:not(.is-current):not(.is-original) .fhpop-use'
-  ).first();
+  const nonOriginalUse = page
+    .locator('#field-history-popup .fhpop-entry:not(.is-current):not(.is-original) .fhpop-use')
+    .first();
   await nonOriginalUse.click();
   await expect(page.locator('#toast-area .toast', { hasText: 'Restored' }).first()).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(200);
@@ -268,9 +278,9 @@ test('Use intermediate keeps field in .changed state (5 ≠ original 2)', async 
   await applyVal(page, 'replicaCount', '5');
   await applyVal(page, 'replicaCount', '9');
   await openHistoryPopup(page, 'replicaCount');
-  const nonOriginalUse = page.locator(
-    '#field-history-popup .fhpop-entry:not(.is-current):not(.is-original) .fhpop-use'
-  ).first();
+  const nonOriginalUse = page
+    .locator('#field-history-popup .fhpop-entry:not(.is-current):not(.is-original) .fhpop-use')
+    .first();
   await nonOriginalUse.click();
   await page.waitForTimeout(200);
   await expect(page.locator('.val-row.changed', { hasText: 'replicaCount' })).toBeVisible();
@@ -293,9 +303,9 @@ test('undo all after list apply: .val-val shows []', async ({ page }) => {
   await page.click('#undo-btn');
   await expect(page.locator('#toast-area .toast', { hasText: 'Reverted' }).first()).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(200);
-  await expect(
-    page.locator('.val-row', { hasText: 'imagePullSecrets' }).first().locator('.val-val')
-  ).toContainText('[]');
+  await expect(page.locator('.val-row', { hasText: 'imagePullSecrets' }).first().locator('.val-val')).toContainText(
+    '[]'
+  );
 });
 
 test('undo all after list apply removes all element rows', async ({ page }) => {
@@ -314,12 +324,8 @@ test('list: apply → undo all → re-apply shows correct element rows and value
   // Re-apply with different values
   await applyYaml(page, 'imagePullSecrets', '[one, two, three]');
   await expect(page.locator('.val-row[data-key*="imagePullSecrets"]')).toHaveCount(3);
-  await expect(
-    page.locator('.val-row', { hasText: 'imagePullSecrets[0]' }).locator('.val-val')
-  ).toContainText('one');
-  await expect(
-    page.locator('.val-row', { hasText: 'imagePullSecrets[2]' }).locator('.val-val')
-  ).toContainText('three');
+  await expect(page.locator('.val-row', { hasText: 'imagePullSecrets[0]' }).locator('.val-val')).toContainText('one');
+  await expect(page.locator('.val-row', { hasText: 'imagePullSecrets[2]' }).locator('.val-val')).toContainText('three');
 });
 
 test('list: apply → revert selected → re-apply shows correct element rows', async ({ page }) => {
@@ -335,12 +341,8 @@ test('list: apply → revert selected → re-apply shows correct element rows', 
   await page.waitForTimeout(200);
   // Re-apply with different values
   await applyYaml(page, 'imagePullSecrets', '[gamma, delta]');
-  await expect(
-    page.locator('.val-row', { hasText: 'imagePullSecrets[0]' }).locator('.val-val')
-  ).toContainText('gamma');
-  await expect(
-    page.locator('.val-row', { hasText: 'imagePullSecrets[1]' }).locator('.val-val')
-  ).toContainText('delta');
+  await expect(page.locator('.val-row', { hasText: 'imagePullSecrets[0]' }).locator('.val-val')).toContainText('gamma');
+  await expect(page.locator('.val-row', { hasText: 'imagePullSecrets[1]' }).locator('.val-val')).toContainText('delta');
 });
 
 // ── Map lifecycle: apply → undo all → re-apply ──
@@ -350,9 +352,7 @@ test('undo all after map apply: .val-val shows {}', async ({ page }) => {
   await page.click('#undo-btn');
   await expect(page.locator('#toast-area .toast', { hasText: 'Reverted' }).first()).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(200);
-  await expect(
-    page.locator('.val-row', { hasText: 'nodeSelector' }).first().locator('.val-val')
-  ).toContainText('{}');
+  await expect(page.locator('.val-row', { hasText: 'nodeSelector' }).first().locator('.val-val')).toContainText('{}');
 });
 
 test('undo all after map apply removes all child rows', async ({ page }) => {
@@ -372,13 +372,11 @@ test('map: apply → undo all → re-apply shows correct child rows and values',
   // Re-apply with different keys
   await applyYaml(page, 'nodeSelector', 'region: eu-west\ntier: prod');
   await expect(page.locator('.val-row', { hasText: 'nodeSelector.region' })).toBeVisible();
-  await expect(
-    page.locator('.val-row', { hasText: 'nodeSelector.region' }).locator('.val-val')
-  ).toContainText('eu-west');
+  await expect(page.locator('.val-row', { hasText: 'nodeSelector.region' }).locator('.val-val')).toContainText(
+    'eu-west'
+  );
   await expect(page.locator('.val-row', { hasText: 'nodeSelector.tier' })).toBeVisible();
-  await expect(
-    page.locator('.val-row', { hasText: 'nodeSelector.tier' }).locator('.val-val')
-  ).toContainText('prod');
+  await expect(page.locator('.val-row', { hasText: 'nodeSelector.tier' }).locator('.val-val')).toContainText('prod');
 });
 
 test('map: apply → revert selected → re-apply shows correct child rows', async ({ page }) => {
@@ -393,10 +391,6 @@ test('map: apply → revert selected → re-apply shows correct child rows', asy
   await page.waitForTimeout(200);
   // Re-apply
   await applyYaml(page, 'nodeSelector', 'app: new\nenv: staging');
-  await expect(
-    page.locator('.val-row', { hasText: 'nodeSelector.app' }).locator('.val-val')
-  ).toContainText('new');
-  await expect(
-    page.locator('.val-row', { hasText: 'nodeSelector.env' }).locator('.val-val')
-  ).toContainText('staging');
+  await expect(page.locator('.val-row', { hasText: 'nodeSelector.app' }).locator('.val-val')).toContainText('new');
+  await expect(page.locator('.val-row', { hasText: 'nodeSelector.env' }).locator('.val-val')).toContainText('staging');
 });

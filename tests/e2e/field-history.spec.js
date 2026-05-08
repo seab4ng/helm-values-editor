@@ -143,7 +143,9 @@ test('clicking "Use" on intermediate history entry restores that value', async (
 
   // The popup shows the intermediate entry (value=5). Click "Use" on it.
   // The intermediate entry has a fhpop-use button that is NOT inside is-original.
-  const nonOriginalUse = page.locator('#field-history-popup .fhpop-entry:not(.is-current):not(.is-original) .fhpop-use').first();
+  const nonOriginalUse = page
+    .locator('#field-history-popup .fhpop-entry:not(.is-current):not(.is-original) .fhpop-use')
+    .first();
   await nonOriginalUse.click();
   await expect(page.locator('#toast-area .toast', { hasText: 'Restored' }).first()).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(200);
@@ -160,7 +162,9 @@ test('intermediate "Use" entry does not clear history (field still shows history
   await row.hover();
   await page.locator('.history-btn').first().click({ force: true });
 
-  const nonOriginalUse = page.locator('#field-history-popup .fhpop-entry:not(.is-current):not(.is-original) .fhpop-use').first();
+  const nonOriginalUse = page
+    .locator('#field-history-popup .fhpop-entry:not(.is-current):not(.is-original) .fhpop-use')
+    .first();
   await nonOriginalUse.click();
   await page.waitForTimeout(200);
 

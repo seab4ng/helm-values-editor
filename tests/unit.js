@@ -1,7 +1,22 @@
 'use strict';
-const {test} = require('node:test');
+const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const {flatten, esc, highlight, displayName, dirOf, buildChartTree, setNestedPath, coerceValue, getNestedVal, valChanged, cleanStaleBracketKeys, cleanDottedKeyCollisions, parsePath, parentPathOf} = require('../app/lib.js');
+const {
+  flatten,
+  esc,
+  highlight,
+  displayName,
+  dirOf,
+  buildChartTree,
+  setNestedPath,
+  coerceValue,
+  getNestedVal,
+  valChanged,
+  cleanStaleBracketKeys,
+  cleanDottedKeyCollisions,
+  parsePath,
+  parentPathOf,
+} = require('../app/lib.js');
 
 // ─────────────────────────────────────────────
 // flatten
@@ -10,58 +25,58 @@ const {flatten, esc, highlight, displayName, dirOf, buildChartTree, setNestedPat
 test('flatten: null value', () => {
   const out = [];
   flatten(null, 'a', out);
-  assert.deepEqual(out, [{path: 'a', val: null, type: 'null'}]);
+  assert.deepEqual(out, [{ path: 'a', val: null, type: 'null' }]);
 });
 
 test('flatten: undefined value', () => {
   const out = [];
   flatten(undefined, 'a', out);
-  assert.deepEqual(out, [{path: 'a', val: null, type: 'null'}]);
+  assert.deepEqual(out, [{ path: 'a', val: null, type: 'null' }]);
 });
 
 test('flatten: number value', () => {
   const out = [];
   flatten(42, 'num', out);
-  assert.deepEqual(out, [{path: 'num', val: '42', type: 'num'}]);
+  assert.deepEqual(out, [{ path: 'num', val: '42', type: 'num' }]);
 });
 
 test('flatten: boolean value', () => {
   const out = [];
   flatten(true, 'flag', out);
-  assert.deepEqual(out, [{path: 'flag', val: 'true', type: 'bool'}]);
+  assert.deepEqual(out, [{ path: 'flag', val: 'true', type: 'bool' }]);
 });
 
 test('flatten: string value', () => {
   const out = [];
   flatten('hello', 'key', out);
-  assert.deepEqual(out, [{path: 'key', val: 'hello', type: 'str'}]);
+  assert.deepEqual(out, [{ path: 'key', val: 'hello', type: 'str' }]);
 });
 
 test('flatten: empty array', () => {
   const out = [];
   flatten([], 'arr', out);
-  assert.deepEqual(out, [{path: 'arr', val: '[]', type: 'arr'}]);
+  assert.deepEqual(out, [{ path: 'arr', val: '[]', type: 'arr' }]);
 });
 
 test('flatten: array with items', () => {
   const out = [];
   flatten(['a', 'b'], 'arr', out);
   assert.deepEqual(out, [
-    {path: 'arr[0]', val: 'a', type: 'str'},
-    {path: 'arr[1]', val: 'b', type: 'str'},
+    { path: 'arr[0]', val: 'a', type: 'str' },
+    { path: 'arr[1]', val: 'b', type: 'str' },
   ]);
 });
 
 test('flatten: empty object', () => {
   const out = [];
   flatten({}, 'obj', out);
-  assert.deepEqual(out, [{path: 'obj', val: '{}', type: 'arr'}]);
+  assert.deepEqual(out, [{ path: 'obj', val: '{}', type: 'arr' }]);
 });
 
 test('flatten: nested object', () => {
   const out = [];
-  flatten({a: {b: 1}}, '', out);
-  assert.deepEqual(out, [{path: 'a.b', val: '1', type: 'num'}]);
+  flatten({ a: { b: 1 } }, '', out);
+  assert.deepEqual(out, [{ path: 'a.b', val: '1', type: 'num' }]);
 });
 
 // ─────────────────────────────────────────────
@@ -84,8 +99,8 @@ test('esc: double quote', () => {
   assert.equal(esc('"hi"'), '&quot;hi&quot;');
 });
 
-test("esc: single quote", () => {
-  assert.equal(esc("it's"), "it&#39;s");
+test('esc: single quote', () => {
+  assert.equal(esc("it's"), 'it&#39;s');
 });
 
 // ─────────────────────────────────────────────
@@ -155,16 +170,13 @@ function jsonStr(obj) {
 }
 
 test('buildChartTree: throws when no Chart.yaml in fileMap', () => {
-  assert.throws(
-    () => buildChartTree({'values.yaml': jsonStr({})}, mockParse),
-    /No Chart\.yaml found/
-  );
+  assert.throws(() => buildChartTree({ 'values.yaml': jsonStr({}) }, mockParse), /No Chart\.yaml found/);
 });
 
 test('buildChartTree: single chart, no subcharts', () => {
   const fileMap = {
-    'Chart.yaml': jsonStr({name: 'myapp', version: '1.0.0', description: 'A simple app'}),
-    'values.yaml': jsonStr({replicaCount: 2}),
+    'Chart.yaml': jsonStr({ name: 'myapp', version: '1.0.0', description: 'A simple app' }),
+    'values.yaml': jsonStr({ replicaCount: 2 }),
   };
   const tree = buildChartTree(fileMap, mockParse);
   assert.equal(tree.root, 'myapp');
@@ -172,15 +184,15 @@ test('buildChartTree: single chart, no subcharts', () => {
   assert.equal(tree.entries['myapp'].name, 'myapp');
   assert.equal(tree.entries['myapp'].version, '1.0.0');
   assert.deepEqual(tree.entries['myapp'].dependencies, []);
-  assert.deepEqual(tree.data['myapp'], {replicaCount: 2});
+  assert.deepEqual(tree.data['myapp'], { replicaCount: 2 });
 });
 
 test('buildChartTree: root + one subchart discovered from charts/ subdir', () => {
   const fileMap = {
-    'Chart.yaml': jsonStr({name: 'parent', version: '0.1.0'}),
-    'values.yaml': jsonStr({foo: 'bar'}),
-    'charts/child/Chart.yaml': jsonStr({name: 'child', version: '0.2.0'}),
-    'charts/child/values.yaml': jsonStr({baz: 1}),
+    'Chart.yaml': jsonStr({ name: 'parent', version: '0.1.0' }),
+    'values.yaml': jsonStr({ foo: 'bar' }),
+    'charts/child/Chart.yaml': jsonStr({ name: 'child', version: '0.2.0' }),
+    'charts/child/values.yaml': jsonStr({ baz: 1 }),
   };
   const tree = buildChartTree(fileMap, mockParse);
   assert.equal(tree.root, 'parent');
@@ -192,8 +204,8 @@ test('buildChartTree: root + one subchart discovered from charts/ subdir', () =>
 
 test('buildChartTree: subchart namespaced key displayName equals bare chart name', () => {
   const fileMap = {
-    'Chart.yaml': jsonStr({name: 'root'}),
-    'charts/sub/Chart.yaml': jsonStr({name: 'sub'}),
+    'Chart.yaml': jsonStr({ name: 'root' }),
+    'charts/sub/Chart.yaml': jsonStr({ name: 'sub' }),
   };
   const tree = buildChartTree(fileMap, mockParse);
   assert.equal(displayName('root|sub'), 'sub');
@@ -204,10 +216,10 @@ test('buildChartTree: deps from Chart.yaml dependencies array merged (no duplica
   const fileMap = {
     'Chart.yaml': jsonStr({
       name: 'root',
-      dependencies: [{name: 'child', version: '1.0.0'}],
+      dependencies: [{ name: 'child', version: '1.0.0' }],
     }),
-    'charts/child/Chart.yaml': jsonStr({name: 'child', version: '1.0.0'}),
-    'charts/child/values.yaml': jsonStr({x: 1}),
+    'charts/child/Chart.yaml': jsonStr({ name: 'child', version: '1.0.0' }),
+    'charts/child/values.yaml': jsonStr({ x: 1 }),
   };
   const tree = buildChartTree(fileMap, mockParse);
   const rootDeps = tree.entries['root'].dependencies;
@@ -218,16 +230,16 @@ test('buildChartTree: deps from Chart.yaml dependencies array merged (no duplica
 
 test('buildChartTree: values.yaml parsed and stored in data', () => {
   const fileMap = {
-    'Chart.yaml': jsonStr({name: 'app'}),
-    'values.yaml': jsonStr({image: {tag: 'latest'}, port: 8080}),
+    'Chart.yaml': jsonStr({ name: 'app' }),
+    'values.yaml': jsonStr({ image: { tag: 'latest' }, port: 8080 }),
   };
   const tree = buildChartTree(fileMap, mockParse);
-  assert.deepEqual(tree.data['app'], {image: {tag: 'latest'}, port: 8080});
+  assert.deepEqual(tree.data['app'], { image: { tag: 'latest' }, port: 8080 });
 });
 
 test('buildChartTree: rootFallback used when Chart.yaml has no name field', () => {
   const fileMap = {
-    'Chart.yaml': jsonStr({version: '0.1.0'}),
+    'Chart.yaml': jsonStr({ version: '0.1.0' }),
   };
   const tree = buildChartTree(fileMap, mockParse, 'myfallback');
   assert.equal(tree.root, 'myfallback');
@@ -239,13 +251,13 @@ test('buildChartTree: rootFallback used when Chart.yaml has no name field', () =
 // ─────────────────────────────────────────────
 
 test('setNestedPath: sets a top-level key', () => {
-  const obj = {port: 80};
+  const obj = { port: 80 };
   setNestedPath(obj, 'port', 9090);
   assert.equal(obj.port, 9090);
 });
 
 test('setNestedPath: sets a nested key', () => {
-  const obj = {service: {port: 80}};
+  const obj = { service: { port: 80 } };
   setNestedPath(obj, 'service.port', 8080);
   assert.equal(obj.service.port, 8080);
 });
@@ -257,21 +269,21 @@ test('setNestedPath: creates intermediate objects when missing', () => {
 });
 
 test('setNestedPath: sets deeply nested key without disturbing siblings', () => {
-  const obj = {image: {tag: 'latest', repository: 'nginx'}};
+  const obj = { image: { tag: 'latest', repository: 'nginx' } };
   setNestedPath(obj, 'image.tag', 'v1.2.3');
   assert.equal(obj.image.tag, 'v1.2.3');
   assert.equal(obj.image.repository, 'nginx');
 });
 
 test('setNestedPath: does nothing when path traverses a non-object', () => {
-  const obj = {a: 'string'};
+  const obj = { a: 'string' };
   setNestedPath(obj, 'a.b', 'value');
   // 'a' is a string, so traversal stops — original value unchanged
   assert.equal(obj.a, 'string');
 });
 
 test('setNestedPath: overwrites existing nested object with scalar', () => {
-  const obj = {service: {port: 80, type: 'ClusterIP'}};
+  const obj = { service: { port: 80, type: 'ClusterIP' } };
   setNestedPath(obj, 'service.type', 'NodePort');
   assert.equal(obj.service.type, 'NodePort');
   assert.equal(obj.service.port, 80);
@@ -325,12 +337,12 @@ test('coerceValue: coerces float string to number', () => {
 // Additional flatten tests
 // ─────────────────────────────────────────────
 
-const {describe} = require('node:test');
+const { describe } = require('node:test');
 
 describe('flatten: additional cases', () => {
   test('deeply nested object 3 levels', () => {
     const out = [];
-    flatten({a: {b: {c: 42}}}, '', out);
+    flatten({ a: { b: { c: 42 } } }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, 'a.b.c');
     assert.equal(out[0].val, '42');
@@ -339,7 +351,7 @@ describe('flatten: additional cases', () => {
 
   test('mixed array of objects', () => {
     const out = [];
-    flatten({ports: [{name: 'http', port: 80}]}, '', out);
+    flatten({ ports: [{ name: 'http', port: 80 }] }, '', out);
     const paths = out.map(e => e.path);
     assert.ok(paths.includes('ports[0].name'), 'expected ports[0].name');
     assert.ok(paths.includes('ports[0].port'), 'expected ports[0].port');
@@ -352,7 +364,7 @@ describe('flatten: additional cases', () => {
 
   test('boolean false value', () => {
     const out = [];
-    flatten({enabled: false}, '', out);
+    flatten({ enabled: false }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, 'enabled');
     assert.equal(out[0].val, 'false');
@@ -361,7 +373,7 @@ describe('flatten: additional cases', () => {
 
   test('null value in nested path', () => {
     const out = [];
-    flatten({config: {key: null}}, '', out);
+    flatten({ config: { key: null } }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, 'config.key');
     assert.equal(out[0].val, null);
@@ -375,7 +387,7 @@ describe('flatten: additional cases', () => {
 
 describe('setNestedPath: additional cases', () => {
   test('overwrites existing nested value', () => {
-    const obj = {a: {b: 1}};
+    const obj = { a: { b: 1 } };
     setNestedPath(obj, 'a.b', 2);
     assert.equal(obj.a.b, 2);
   });
@@ -412,10 +424,7 @@ describe('coerceValue: additional cases', () => {
 describe('highlight: additional cases', () => {
   test('query appears multiple times wraps both occurrences', () => {
     const result = highlight('port portforward', 'port');
-    assert.equal(
-      result,
-      '<span class="hl">port</span> <span class="hl">port</span>forward'
-    );
+    assert.equal(result, '<span class="hl">port</span> <span class="hl">port</span>forward');
   });
 
   test('empty query returns escaped input', () => {
@@ -430,9 +439,9 @@ describe('highlight: additional cases', () => {
 describe('buildChartTree: additional cases', () => {
   test('root with no values.yaml but has subcharts is still built', () => {
     const fileMap = {
-      'Chart.yaml': jsonStr({name: 'rootchart', version: '1.0.0'}),
-      'charts/sub/Chart.yaml': jsonStr({name: 'sub', version: '0.1.0'}),
-      'charts/sub/values.yaml': jsonStr({key: 'val'}),
+      'Chart.yaml': jsonStr({ name: 'rootchart', version: '1.0.0' }),
+      'charts/sub/Chart.yaml': jsonStr({ name: 'sub', version: '0.1.0' }),
+      'charts/sub/values.yaml': jsonStr({ key: 'val' }),
     };
     const tree = buildChartTree(fileMap, mockParse);
     assert.equal(tree.root, 'rootchart');
@@ -443,8 +452,8 @@ describe('buildChartTree: additional cases', () => {
 
   test('subchart whose name comes from directory when Chart.yaml has no name field', () => {
     const fileMap = {
-      'Chart.yaml': jsonStr({name: 'parent', version: '1.0.0'}),
-      'charts/mysubdir/Chart.yaml': jsonStr({version: '0.5.0'}),
+      'Chart.yaml': jsonStr({ name: 'parent', version: '1.0.0' }),
+      'charts/mysubdir/Chart.yaml': jsonStr({ version: '0.5.0' }),
     };
     const tree = buildChartTree(fileMap, mockParse);
     const subKey = Object.keys(tree.entries).find(k => k !== 'parent');
@@ -458,32 +467,32 @@ describe('buildChartTree: additional cases', () => {
 // ─────────────────────────────────────────────
 
 test('getNestedVal: top-level key exists returns value', () => {
-  const obj = {port: 8080};
+  const obj = { port: 8080 };
   assert.equal(getNestedVal(obj, 'port'), 8080);
 });
 
 test('getNestedVal: nested key two levels returns value', () => {
-  const obj = {service: {port: 3000}};
+  const obj = { service: { port: 3000 } };
   assert.equal(getNestedVal(obj, 'service.port'), 3000);
 });
 
 test('getNestedVal: deeply nested three levels returns value', () => {
-  const obj = {a: {b: {c: 'deep'}}};
+  const obj = { a: { b: { c: 'deep' } } };
   assert.equal(getNestedVal(obj, 'a.b.c'), 'deep');
 });
 
 test('getNestedVal: non-existent key returns undefined', () => {
-  const obj = {a: 1};
+  const obj = { a: 1 };
   assert.equal(getNestedVal(obj, 'z'), undefined);
 });
 
 test('getNestedVal: path through null returns undefined', () => {
-  const obj = {a: null};
+  const obj = { a: null };
   assert.equal(getNestedVal(obj, 'a.b'), undefined);
 });
 
 test('getNestedVal: path through a string (non-object) returns undefined', () => {
-  const obj = {a: 'hello'};
+  const obj = { a: 'hello' };
   assert.equal(getNestedVal(obj, 'a.b'), undefined);
 });
 
@@ -493,44 +502,44 @@ test('getNestedVal: single key on empty object returns undefined', () => {
 
 test('getNestedVal: array value at path returns the array', () => {
   const arr = [1, 2, 3];
-  const obj = {items: arr};
+  const obj = { items: arr };
   assert.deepEqual(getNestedVal(obj, 'items'), arr);
 });
 
 test('getNestedVal: explicit undefined value at key returns undefined', () => {
-  const obj = {a: undefined};
+  const obj = { a: undefined };
   assert.equal(getNestedVal(obj, 'a'), undefined);
 });
 
 test('getNestedVal: number value at path returns number', () => {
-  const obj = {metrics: {count: 42}};
+  const obj = { metrics: { count: 42 } };
   assert.equal(getNestedVal(obj, 'metrics.count'), 42);
 });
 
 test('getNestedVal: bracket notation reads array element', () => {
-  const obj = {env: ['a', 'b', 'c']};
+  const obj = { env: ['a', 'b', 'c'] };
   assert.equal(getNestedVal(obj, 'env[1]'), 'b');
 });
 
 test('getNestedVal: nested bracket notation reads deep array element', () => {
-  const obj = {global: {env: ['x', 'y']}};
+  const obj = { global: { env: ['x', 'y'] } };
   assert.equal(getNestedVal(obj, 'global.env[0]'), 'x');
 });
 
 test('getNestedVal: bracket then dot reads object inside array', () => {
-  const obj = {items: [{name: 'foo'}, {name: 'bar'}]};
+  const obj = { items: [{ name: 'foo' }, { name: 'bar' }] };
   assert.equal(getNestedVal(obj, 'items[1].name'), 'bar');
 });
 
 test('setNestedPath: bracket notation sets array element', () => {
-  const obj = {env: ['a', 'b', 'c']};
+  const obj = { env: ['a', 'b', 'c'] };
   setNestedPath(obj, 'env[1]', 'CHANGED');
   assert.equal(obj.env[1], 'CHANGED');
   assert.equal(obj.env[0], 'a');
 });
 
 test('setNestedPath: nested bracket notation sets deep array element', () => {
-  const obj = {global: {env: ['x', 'y']}};
+  const obj = { global: { env: ['x', 'y'] } };
   setNestedPath(obj, 'global.env[0]', 'NEW');
   assert.equal(obj.global.env[0], 'NEW');
   assert.equal(obj.global.env[1], 'y');
@@ -538,9 +547,9 @@ test('setNestedPath: nested bracket notation sets deep array element', () => {
 
 test('setNestedPath: removes stale bracket key when setting array element', () => {
   // Simulate corruption: obj has both the real array and a stale literal-bracket key
-  const obj = {global: {env: ['original', 'b'], 'env[0]': 'stale'}};
+  const obj = { global: { env: ['original', 'b'], 'env[0]': 'stale' } };
   setNestedPath(obj, 'global.env[0]', 'NEW');
-  assert.equal(obj.global.env[0], 'NEW');       // real array updated
+  assert.equal(obj.global.env[0], 'NEW'); // real array updated
   assert.equal(obj.global['env[0]'], undefined); // stale key removed
 });
 
@@ -549,14 +558,14 @@ test('setNestedPath: removes stale bracket key when setting array element', () =
 // ─────────────────────────────────────────────
 
 test('cleanStaleBracketKeys: removes stale top-level bracket key', () => {
-  const obj = {env: ['a', 'b'], 'env[0]': 'stale'};
+  const obj = { env: ['a', 'b'], 'env[0]': 'stale' };
   cleanStaleBracketKeys(obj);
   assert.deepEqual(Object.keys(obj), ['env']);
   assert.deepEqual(obj.env, ['a', 'b']);
 });
 
 test('cleanStaleBracketKeys: removes stale nested bracket key', () => {
-  const obj = {global: {env: ['x', 'y'], 'env[1]': 'STALE'}};
+  const obj = { global: { env: ['x', 'y'], 'env[1]': 'STALE' } };
   cleanStaleBracketKeys(obj);
   assert.equal(obj.global['env[1]'], undefined);
   assert.deepEqual(obj.global.env, ['x', 'y']);
@@ -564,13 +573,13 @@ test('cleanStaleBracketKeys: removes stale nested bracket key', () => {
 
 test('cleanStaleBracketKeys: leaves non-stale bracket-looking keys alone', () => {
   // key "env[0]" exists but there is no "env" array sibling → not stale, keep it
-  const obj = {'env[0]': 'keep'};
+  const obj = { 'env[0]': 'keep' };
   cleanStaleBracketKeys(obj);
   assert.equal(obj['env[0]'], 'keep');
 });
 
 test('cleanStaleBracketKeys: is a no-op on clean objects', () => {
-  const obj = {global: {env: ['a', 'b'], other: 'val'}};
+  const obj = { global: { env: ['a', 'b'], other: 'val' } };
   cleanStaleBracketKeys(obj);
   assert.deepEqual(obj.global.env, ['a', 'b']);
   assert.equal(obj.global.other, 'val');
@@ -581,26 +590,26 @@ test('cleanStaleBracketKeys: is a no-op on clean objects', () => {
 // ─────────────────────────────────────────────
 
 test('cleanDottedKeyCollisions: removes dotted key when nested path also exists', () => {
-  const obj = {configs: {cm: {'statusbadge.enabled': false, statusbadge: {enabled: 'trrr'}}}};
+  const obj = { configs: { cm: { 'statusbadge.enabled': false, statusbadge: { enabled: 'trrr' } } } };
   cleanDottedKeyCollisions(obj);
   assert.equal(obj.configs.cm['statusbadge.enabled'], undefined);
   assert.equal(obj.configs.cm.statusbadge.enabled, 'trrr');
 });
 
 test('cleanDottedKeyCollisions: leaves dotted key when nested path does NOT exist', () => {
-  const obj = {configs: {'statusbadge.enabled': false}};
+  const obj = { configs: { 'statusbadge.enabled': false } };
   cleanDottedKeyCollisions(obj);
   assert.equal(obj.configs['statusbadge.enabled'], false); // kept — no conflict
 });
 
 test('cleanDottedKeyCollisions: is no-op on clean objects', () => {
-  const obj = {configs: {cm: {statusbadge: {enabled: false}}}};
+  const obj = { configs: { cm: { statusbadge: { enabled: false } } } };
   cleanDottedKeyCollisions(obj);
   assert.equal(obj.configs.cm.statusbadge.enabled, false);
 });
 
 test('setNestedPath: deletes dotted-key shortcut when writing nested path', () => {
-  const obj = {cm: {'statusbadge.enabled': false}};
+  const obj = { cm: { 'statusbadge.enabled': false } };
   setNestedPath(obj, 'cm.statusbadge.enabled', 'NEW');
   assert.equal(obj.cm['statusbadge.enabled'], undefined); // stale dotted key gone
   assert.equal(obj.cm.statusbadge.enabled, 'NEW');
@@ -687,7 +696,7 @@ describe('coerceValue: quote stripping', () => {
 describe('setNestedPath: dotted-key cleanup at multiple levels', () => {
   test('deletes root-level dotted shortcut (two-part path)', () => {
     // obj has a stale "a.b" key AND nested a.b — writing should keep only nested
-    const obj = {'a.b': 'stale', a: {b: 'old'}};
+    const obj = { 'a.b': 'stale', a: { b: 'old' } };
     setNestedPath(obj, 'a.b', 'NEW');
     assert.equal(obj['a.b'], undefined);
     assert.equal(obj.a.b, 'NEW');
@@ -695,14 +704,14 @@ describe('setNestedPath: dotted-key cleanup at multiple levels', () => {
 
   test('deletes intermediate dotted shortcut when writing three-part path', () => {
     // a has key "b.c" (stale) AND nested b.c — write a.b.c should clean a["b.c"]
-    const obj = {a: {'b.c': 'stale', b: {c: 'old'}}};
+    const obj = { a: { 'b.c': 'stale', b: { c: 'old' } } };
     setNestedPath(obj, 'a.b.c', 'NEW');
     assert.equal(obj.a['b.c'], undefined);
     assert.equal(obj.a.b.c, 'NEW');
   });
 
   test('sets value inside array element via bracket notation', () => {
-    const obj = {items: [{name: 'foo'}, {name: 'bar'}]};
+    const obj = { items: [{ name: 'foo' }, { name: 'bar' }] };
     setNestedPath(obj, 'items[1].name', 'baz');
     assert.equal(obj.items[1].name, 'baz');
     assert.equal(obj.items[0].name, 'foo'); // sibling unchanged
@@ -738,7 +747,7 @@ describe('cleanDottedKeyCollisions: preserves legitimate dotted YAML keys', () =
 
 describe('cleanDottedKeyCollisions: additional cases', () => {
   test('removes three-segment dotted key when full nested path exists', () => {
-    const obj = {'a.b.c': 'stale', a: {b: {c: 'real'}}};
+    const obj = { 'a.b.c': 'stale', a: { b: { c: 'real' } } };
     cleanDottedKeyCollisions(obj);
     assert.equal(obj['a.b.c'], undefined);
     assert.equal(obj.a.b.c, 'real');
@@ -746,14 +755,14 @@ describe('cleanDottedKeyCollisions: additional cases', () => {
 
   test('keeps dotted key when only partial nested path exists', () => {
     // obj.a exists but obj.a.b does not → dotted key "a.b" is NOT stale
-    const obj = {'a.b': 'keep', a: {other: 1}};
+    const obj = { 'a.b': 'keep', a: { other: 1 } };
     cleanDottedKeyCollisions(obj);
     assert.equal(obj['a.b'], 'keep');
   });
 
   test('processes objects inside arrays recursively', () => {
     // Each element may have dotted-key collisions
-    const obj = {items: [{'x.y': 'stale', x: {y: 'real'}}]};
+    const obj = { items: [{ 'x.y': 'stale', x: { y: 'real' } }] };
     cleanDottedKeyCollisions(obj);
     assert.equal(obj.items[0]['x.y'], undefined);
     assert.equal(obj.items[0].x.y, 'real');
@@ -767,7 +776,7 @@ describe('cleanDottedKeyCollisions: additional cases', () => {
 describe('flatten: edge scalar values', () => {
   test('empty string value produces str entry', () => {
     const out = [];
-    flatten({key: ''}, '', out);
+    flatten({ key: '' }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, 'key');
     assert.equal(out[0].val, '');
@@ -776,7 +785,7 @@ describe('flatten: edge scalar values', () => {
 
   test('zero number produces num entry', () => {
     const out = [];
-    flatten({count: 0}, '', out);
+    flatten({ count: 0 }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, 'count');
     assert.equal(out[0].val, '0');
@@ -785,7 +794,7 @@ describe('flatten: edge scalar values', () => {
 
   test('multiple top-level keys all appear', () => {
     const out = [];
-    flatten({a: 1, b: 2, c: 3}, '', out);
+    flatten({ a: 1, b: 2, c: 3 }, '', out);
     assert.equal(out.length, 3);
     const paths = out.map(e => e.path);
     assert.ok(paths.includes('a'));
@@ -820,7 +829,10 @@ describe('parsePath', () => {
   });
 
   test('quoted dotted YAML key nested', () => {
-    assert.deepEqual(parsePath('annotations["argocd.argoproj.io/sync-options"]'), ['annotations', 'argocd.argoproj.io/sync-options']);
+    assert.deepEqual(parsePath('annotations["argocd.argoproj.io/sync-options"]'), [
+      'annotations',
+      'argocd.argoproj.io/sync-options',
+    ]);
   });
 
   test('quoted key with escaped double-quote inside', () => {
@@ -878,7 +890,7 @@ describe('parentPathOf', () => {
 describe('flatten: dotted YAML keys', () => {
   test('key with dot gets ["key"] bracket encoding', () => {
     const out = [];
-    flatten({'argocd.argoproj.io/sync-options': 'Prune=false'}, '', out);
+    flatten({ 'argocd.argoproj.io/sync-options': 'Prune=false' }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, '["argocd.argoproj.io/sync-options"]');
     assert.equal(out[0].val, 'Prune=false');
@@ -886,27 +898,27 @@ describe('flatten: dotted YAML keys', () => {
 
   test('nested dotted key gets bracket notation under parent', () => {
     const out = [];
-    flatten({annotations: {'argocd.argoproj.io/sync-options': 'Prune=false'}}, '', out);
+    flatten({ annotations: { 'argocd.argoproj.io/sync-options': 'Prune=false' } }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, 'annotations["argocd.argoproj.io/sync-options"]');
   });
 
   test('normal keys still use dot notation', () => {
     const out = [];
-    flatten({image: {tag: 'latest'}}, '', out);
+    flatten({ image: { tag: 'latest' } }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, 'image.tag');
   });
 
   test('key with bracket character gets quoted encoding', () => {
     const out = [];
-    flatten({'key[0]': 'val'}, '', out);
+    flatten({ 'key[0]': 'val' }, '', out);
     assert.equal(out.length, 1);
     assert.equal(out[0].path, '["key[0]"]');
   });
 
   test('round-trip: getNestedVal reads back value written by setNestedPath for dotted key', () => {
-    const obj = {annotations: {'argocd.argoproj.io/sync-options': 'Prune=false'}};
+    const obj = { annotations: { 'argocd.argoproj.io/sync-options': 'Prune=false' } };
     const out = [];
     flatten(obj, '', out);
     const path = out[0].path; // 'annotations["argocd.argoproj.io/sync-options"]'
@@ -920,19 +932,19 @@ describe('flatten: dotted YAML keys', () => {
 
 describe('setNestedPath: dotted YAML keys', () => {
   test('writes to dotted YAML key via bracket notation', () => {
-    const obj = {annotations: {'argocd.argoproj.io/sync-options': 'Prune=false'}};
+    const obj = { annotations: { 'argocd.argoproj.io/sync-options': 'Prune=false' } };
     setNestedPath(obj, 'annotations["argocd.argoproj.io/sync-options"]', 'Prune=true');
     assert.equal(obj.annotations['argocd.argoproj.io/sync-options'], 'Prune=true');
   });
 
   test('writes root-level dotted YAML key', () => {
-    const obj = {'argocd.argoproj.io/sync-options': 'old'};
+    const obj = { 'argocd.argoproj.io/sync-options': 'old' };
     setNestedPath(obj, '["argocd.argoproj.io/sync-options"]', 'new');
     assert.equal(obj['argocd.argoproj.io/sync-options'], 'new');
   });
 
   test('does NOT delete legitimate dotted YAML key when writing sibling', () => {
-    const obj = {annotations: {'argocd.argoproj.io/sync-options': 'keep', 'other': 'val'}};
+    const obj = { annotations: { 'argocd.argoproj.io/sync-options': 'keep', other: 'val' } };
     setNestedPath(obj, 'annotations.other', 'changed');
     // dotted key must still exist
     assert.equal(obj.annotations['argocd.argoproj.io/sync-options'], 'keep');
@@ -945,17 +957,17 @@ describe('setNestedPath: dotted YAML keys', () => {
 
 describe('getNestedVal: dotted YAML keys', () => {
   test('reads dotted YAML key via bracket notation', () => {
-    const obj = {annotations: {'argocd.argoproj.io/sync-options': 'Prune=false'}};
+    const obj = { annotations: { 'argocd.argoproj.io/sync-options': 'Prune=false' } };
     assert.equal(getNestedVal(obj, 'annotations["argocd.argoproj.io/sync-options"]'), 'Prune=false');
   });
 
   test('reads root-level dotted key', () => {
-    const obj = {'argocd.argoproj.io/sync-options': 'yes'};
+    const obj = { 'argocd.argoproj.io/sync-options': 'yes' };
     assert.equal(getNestedVal(obj, '["argocd.argoproj.io/sync-options"]'), 'yes');
   });
 
   test('returns undefined for missing dotted key path', () => {
-    const obj = {annotations: {}};
+    const obj = { annotations: {} };
     assert.equal(getNestedVal(obj, 'annotations["missing.key"]'), undefined);
   });
 });
@@ -969,9 +981,9 @@ describe('buildChartTree: alias support', () => {
     const fileMap = {
       'Chart.yaml': jsonStr({
         name: 'root',
-        dependencies: [{name: 'child', alias: 'my-alias', version: '1.0.0'}],
+        dependencies: [{ name: 'child', alias: 'my-alias', version: '1.0.0' }],
       }),
-      'charts/child/Chart.yaml': jsonStr({name: 'child', version: '1.0.0'}),
+      'charts/child/Chart.yaml': jsonStr({ name: 'child', version: '1.0.0' }),
     };
     const tree = buildChartTree(fileMap, mockParse);
     // The alias is used when listing deps in the parent entry

@@ -18,13 +18,22 @@
   "scripts": {
     "start": "npx serve app -p 3000",
     "test": "node --test tests/unit.js",
-    "test:e2e": "npx playwright test"
+    "test:e2e": "npx playwright test",
+    "test:coverage": "node --test --experimental-test-coverage tests/unit.js",
+    "lint": "eslint app/lib.js tests/ playwright.config.js",
+    "lint:fix": "eslint --fix app/lib.js tests/ playwright.config.js",
+    "format": "prettier --write app/lib.js tests/ playwright.config.js",
+    "format:check": "prettier --check app/lib.js tests/ playwright.config.js"
   },
   "dependencies": {
     "js-yaml": "4.1.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "^1.59.1",
+    "eslint": "^10.3.0",
+    "globals": "^17.6.0",
+    "prettier": "^3.8.3",
     "serve": "^14.2.6"
   }
 }

@@ -24,8 +24,12 @@ function injectDottedKeyMocks() {
       createWritable: async () => {
         let buf = '';
         return {
-          write: async (c) => { buf += c; },
-          close: async () => { content = buf; },
+          write: async c => {
+            buf += c;
+          },
+          close: async () => {
+            content = buf;
+          },
         };
       },
       requestPermission: async () => 'granted',
@@ -35,8 +39,12 @@ function injectDottedKeyMocks() {
   const chartsDir = {
     kind: 'directory',
     name: 'charts',
-    getFileHandle: async () => { throw new DOMException('not found', 'NotFoundError'); },
-    getDirectoryHandle: async () => { throw new DOMException('not found', 'NotFoundError'); },
+    getFileHandle: async () => {
+      throw new DOMException('not found', 'NotFoundError');
+    },
+    getDirectoryHandle: async () => {
+      throw new DOMException('not found', 'NotFoundError');
+    },
     entries: async function* () {},
     requestPermission: async () => 'granted',
   };
@@ -47,12 +55,12 @@ function injectDottedKeyMocks() {
   const dirHandle = {
     kind: 'directory',
     name: 'test-chart',
-    getFileHandle: async (name) => {
+    getFileHandle: async name => {
       if (name === 'Chart.yaml') return chartFile;
       if (name === 'values.yaml') return valuesFile;
       throw new DOMException('not found', 'NotFoundError');
     },
-    getDirectoryHandle: async (name) => {
+    getDirectoryHandle: async name => {
       if (name === 'charts') return chartsDir;
       throw new DOMException('not found', 'NotFoundError');
     },
@@ -64,6 +72,7 @@ function injectDottedKeyMocks() {
     requestPermission: async () => 'granted',
   };
 
+  /* global window */
   window.showDirectoryPicker = async () => dirHandle;
   window.showOpenFilePicker = async () => [makeFile('values.yaml', valuesYamlContent)];
 }
@@ -80,9 +89,7 @@ test.beforeEach(async ({ page }) => {
 test('dotted YAML key shows in value rows with bracket-encoded path', async ({ page }) => {
   // The path must use ["key"] bracket notation, NOT dot notation that would collide
   // with a nested object path.
-  await expect(
-    page.locator('.val-row', { hasText: 'argocd.argoproj.io/sync-options' })
-  ).toBeVisible();
+  await expect(page.locator('.val-row', { hasText: 'argocd.argoproj.io/sync-options' })).toBeVisible();
 });
 
 test('dotted YAML key path contains bracket notation in UI', async ({ page }) => {
@@ -124,9 +131,9 @@ test('applying a change to dotted YAML key marks it with changed class', async (
   await row.locator('input[type=checkbox]').check();
   await page.fill('#new-val', 'Prune=true');
   await page.click('#apply-btn');
-  await expect(
-    page.locator('.val-row.changed', { hasText: 'argocd.argoproj.io/sync-options' })
-  ).toBeVisible({ timeout: 3000 });
+  await expect(page.locator('.val-row.changed', { hasText: 'argocd.argoproj.io/sync-options' })).toBeVisible({
+    timeout: 3000,
+  });
 });
 
 test('applying change to dotted key updates the diff badge', async ({ page }) => {
@@ -159,7 +166,10 @@ test('Revert selected on dotted YAML key restores original value', async ({ page
   await expect(page.locator('#toast-area .toast', { hasText: 'Updated' }).first()).toBeVisible({ timeout: 3000 });
 
   // Re-select the changed field and revert
-  await page.locator('.val-row.changed', { hasText: 'argocd.argoproj.io/sync-options' }).locator('input[type=checkbox]').check();
+  await page
+    .locator('.val-row.changed', { hasText: 'argocd.argoproj.io/sync-options' })
+    .locator('input[type=checkbox]')
+    .check();
   await page.click('#undo-btn'); // Revert selected
   await expect(page.locator('#toast-area .toast', { hasText: 'Reverted' }).first()).toBeVisible({ timeout: 3000 });
   await page.waitForTimeout(200);
