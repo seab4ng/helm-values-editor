@@ -5,6 +5,39 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versio
 
 ---
 
+## [1.1.0](https://github.com/seab4ng/helm-values-editor/compare/helm-values-editor-v1.0.7...helm-values-editor-v1.1.0) (2026-05-08)
+
+
+### Features
+
+* add chart tree filter/search with fuzzy name matching ([de92fc3](https://github.com/seab4ng/helm-values-editor/commit/de92fc3e357d57f3c517448a9db00cfac51214b1))
+* configurable app name and version via APP_NAME/APP_VERSION env vars ([4122c29](https://github.com/seab4ng/helm-values-editor/commit/4122c2984526333d4dda4254e51b369ad8a00d7d))
+* persist user-added charts and values across browser refreshes ([ef56fb2](https://github.com/seab4ng/helm-values-editor/commit/ef56fb20e18c7d7fbe6f330aa603af0bb96b2001))
+* release CI/CD, expanded tests, updated README ([fa623d5](https://github.com/seab4ng/helm-values-editor/commit/fa623d51f1a3f8f37dd574ba60009b09c88d8467))
+* replace build-time chart baking with local file editor ([16f4ece](https://github.com/seab4ng/helm-values-editor/commit/16f4ecebe02f087ba8d1b2524e387132232dbdea))
+* session persistence, clear all, maintainer footer ([cfb544a](https://github.com/seab4ng/helm-values-editor/commit/cfb544ad0462953cf0ed0bf2cfbdf218563f881b))
+* show subchart values on parent selection and add .tgz chart upload ([7fc6ebc](https://github.com/seab4ng/helm-values-editor/commit/7fc6ebc550b5aff745a0df6426e83eab705284fb))
+* **tooltip:** show only when text is actually truncated ([#13](https://github.com/seab4ng/helm-values-editor/issues/13)) ([985390d](https://github.com/seab4ng/helm-values-editor/commit/985390d0a5ca7e963a9e55d9b8f5cb37a629f02b))
+* **yaml-editor:** Option B+C — YAML textarea toggle + mixed-type guard ([#3](https://github.com/seab4ng/helm-values-editor/issues/3)) ([30ddf3c](https://github.com/seab4ng/helm-values-editor/commit/30ddf3cd94b1fc5313a35de35f0677d0a1508b55))
+
+
+### Bug Fixes
+
+* add visible border to About modal ([6c09157](https://github.com/seab4ng/helm-values-editor/commit/6c09157448261aa98562edcc2700f138c32cc812))
+* deep-clone YAML value per field to prevent anchor/alias output ([e6ea7ce](https://github.com/seab4ng/helm-values-editor/commit/e6ea7cea809a9780fcebc6a58fc1cfaabf9b337b))
+* dismiss banner clears IndexedDB cache ([4c2ee9a](https://github.com/seab4ng/helm-values-editor/commit/4c2ee9a92468d32347c299f9fa68d764eaf3cd19))
+* **e2e:** remove undefined autoSizeValuesPanel call, fix strict-mode violations ([201a411](https://github.com/seab4ng/helm-values-editor/commit/201a411ec2f180886317dc4c52f8d724f17e6d23))
+* enable write-back for standalone YAML files ([556f0d5](https://github.com/seab4ng/helm-values-editor/commit/556f0d5bf03851eb8fd9802322f681ade9aa5f15))
+* full airgap + dead code cleanup ([da356b6](https://github.com/seab4ng/helm-values-editor/commit/da356b62f5dd475ab5fc4c3a300fd13f3bb4e924))
+* harden image security + Trivy scan in CI ([964b9ab](https://github.com/seab4ng/helm-values-editor/commit/964b9abca2a2e80128a4a81dced6cef18075047d))
+* **history:** preserve original value types on restore/revert ([#14](https://github.com/seab4ng/helm-values-editor/issues/14)) ([cb9141f](https://github.com/seab4ng/helm-values-editor/commit/cb9141fdb6691d9612fe39835653411ab856bcfc))
+* inline coerceValue/setNestedPath, move batch bar above values, rename button ([b4a3063](https://github.com/seab4ng/helm-values-editor/commit/b4a3063222fce1564a553b3b2b87de066bc9eb9e))
+* multiple chart trees colliding via shared rendered Set ([f67afcf](https://github.com/seab4ng/helm-values-editor/commit/f67afcf92d6b95b6714b8748ad35fb5a2ea007d1))
+* namespace subchart keys to prevent cross-tree collisions ([267bfa5](https://github.com/seab4ng/helm-values-editor/commit/267bfa59423ef18f17d0f93eff821e68628d702a))
+* subchart dependencies not showing in tree after folder/.tgz upload ([47bb6c2](https://github.com/seab4ng/helm-values-editor/commit/47bb6c2d7b993f1724f7ee489569b7fdff67f563))
+* **test:** update coerceValue 'null' test to expect actual null ([3609dd3](https://github.com/seab4ng/helm-values-editor/commit/3609dd385320d4f07c352f25921663970821c357))
+* yaml mode empty textarea, list/map mixed-type guard ([31f0653](https://github.com/seab4ng/helm-values-editor/commit/31f0653c34bb9ffb37dd0bdee831b93dfc8d0a3e))
+
 ## [Unreleased] — targeting 1.1.0
 
 ### Added
