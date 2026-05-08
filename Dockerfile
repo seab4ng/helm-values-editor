@@ -1,4 +1,4 @@
-FROM node:22-alpine AS vendor
+FROM node:26-alpine AS vendor
 WORKDIR /build
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
