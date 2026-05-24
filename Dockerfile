@@ -3,7 +3,7 @@ WORKDIR /build
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
 
-FROM nginx:1.29-alpine
+FROM nginx:1.31.1-alpine
 
 LABEL maintainer="Yakir Veneci" \
       org.opencontainers.image.authors="Yakir Veneci" \
