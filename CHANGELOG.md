@@ -5,6 +5,13 @@ Format based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), versio
 
 ---
 
+## [1.2.4](https://github.com/seab4ng/helm-values-editor/compare/v1.2.3...v1.2.4) (2026-06-02)
+
+
+### Bug Fixes
+
+* **deps:** bump fast-uri to 3.1.2 to fix high-severity audit failing all CI ([#36](https://github.com/seab4ng/helm-values-editor/issues/36)) ([9eb51de](https://github.com/seab4ng/helm-values-editor/commit/9eb51de2063b151756327a385a3d67e788f66553))
+
 ## [1.2.3](https://github.com/seab4ng/helm-values-editor/compare/v1.2.2...v1.2.3) (2026-05-08)
 
 
